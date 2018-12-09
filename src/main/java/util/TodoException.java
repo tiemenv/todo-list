@@ -1,3 +1,5 @@
+package util;
+
 public class TodoException extends RuntimeException {
     public TodoException(String msg) {
         super(msg);

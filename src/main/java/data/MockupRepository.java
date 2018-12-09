@@ -1,3 +1,8 @@
+package data;
+
+import domain.Todo;
+import util.TodoException;
+
 import java.util.ArrayList;
 
 public class MockupRepository implements TodoRepository {
@@ -7,7 +12,7 @@ public class MockupRepository implements TodoRepository {
     public MockupRepository(){
         todos = new ArrayList<>();
         todos.add(new Todo("testTodo", 10));
-        todos.add(new Todo("Todo from mockuprepo", 5));
+        todos.add(new Todo("domain.Todo from mockuprepo", 5));
         todos.add(new Todo("Very important", 30));
         todos.add(new Todo("Not that important", 2));
     }
@@ -33,7 +38,6 @@ public class MockupRepository implements TodoRepository {
     @Override
     public Todo getTodo(int id) {
         for (Todo t : this.getTodos()){
-            //Todo: no equals required? Just comparing 2 ints?
             if(t.getId() == id){
                 return t;
             }

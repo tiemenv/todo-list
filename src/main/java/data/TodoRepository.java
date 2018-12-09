@@ -1,3 +1,7 @@
+package data;
+
+import domain.Todo;
+
 import java.util.ArrayList;
 
 public interface TodoRepository {

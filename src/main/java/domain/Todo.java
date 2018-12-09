@@ -1,3 +1,5 @@
+package domain;
+
 import java.util.Objects;
 
 public class Todo {
@@ -8,10 +10,23 @@ public class Todo {
     private int importance;
     private boolean done;
 
+    public Todo(String description, int importance, boolean done) {
+        this.description = description;
+        this.importance = importance;
+        this.done = done;
+    }
+
     public Todo(String description, int importance) {
         this.description = description;
         this.importance = importance;
     }
+
+    public Todo(String description){
+        this.description = description;
+        this.importance = 0;
+    }
+
+
 
     public int getId() {
         return id;
