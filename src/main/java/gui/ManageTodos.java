@@ -55,7 +55,7 @@ public class ManageTodos {
     private void tryToAddTodo(Todo t){
         try {
             //TODO: we need to somehow assign and know the id of the added todo
-            todoObservableList.add(t);
+            todoObservableList.add(new Todo(Repositories.getInstance().getTodoRepository().addTodo(t), t.getDescription(), t.getImportance(), t.isDone()));
         } catch(TodoException ex){
             Alert al = new Alert(Alert.AlertType.ERROR);
             al.setContentText(ex.getMessage());

@@ -1,6 +1,5 @@
 package data;
 
-import data.MsSqlConnection;
 import domain.Todo;
 import util.TodoException;
 
@@ -14,26 +13,36 @@ public class MsSqlRepository implements TodoRepository {
 
     private static final String SQL_GET_TODOS = "select * from dbo.todos";
     private static final String SQL_GET_TODO = "select * from dbo.todos where id like ?";
-    private static final String SQL_ADD_TODO = "insert into dbo.todos (description, importance) values (?, ?);" +
-            "select id from dbo.todos limit 1";
+    private static final String SQL_ADD_TODO = "insert into dbo.todos (description, importance) values (?, ?);";
     private static final String SQL_UPDATE_TODO_DESCRIPTION = "update dbo.todos set description = ? where id like ?";
     private static final String SQL_UPDATE_TODO_IMPORTANCE = "update dbo.todos set importance = ? where id like ?";
     private static final String SQL_DELETE_TODO = "delete from dbo.todos where id = ?";
 
+    //dirty, problems when multithreading!
+    private static final String SQL_GET_LAST_ID = "select top(1) id from dbo.todos order by id desc";
+
     @Override
-    //TODO: make this return the assigned id from the DB
-    //or try to add all the id's when initing?
-    public void addTodo(Todo t) {
+    public int addTodo(Todo t) {
         try (
                 Connection con = MsSqlConnection.getConnection();
                 PreparedStatement prep = con.prepareStatement(SQL_ADD_TODO);
         ) {
+            System.out.println("Adding todo");
             prep.setString(1, t.getDescription());
             prep.setInt(2, t.getImportance());
             prep.executeUpdate();
+            //now get the id of the inserted item
+            try(PreparedStatement prep2 = con.prepareStatement(SQL_GET_LAST_ID)){
+                try(ResultSet rs = prep2.executeQuery()){
+                    while(rs.next()){
+                        return rs.getInt("id");
+                    }
+                }
+            }
         } catch (SQLException ex) {
             throw new TodoException("Unable to add todo to DB", ex);
         }
+        return 0;
     }
 
     @Override
@@ -43,18 +52,18 @@ public class MsSqlRepository implements TodoRepository {
                 PreparedStatement prep = con.prepareStatement(SQL_DELETE_TODO);
         ) {
             //TODO: get the id from the selected Todo
-            //t.getId() always returns 0...
+            //t.getId() works for the initialized items, but not for later added ones
             System.out.println("Deleting todo with id: " + t.getId());
             prep.setInt(1, t.getId());
             prep.executeUpdate();
         } catch (SQLException ex) {
-            throw new TodoException("Unable to add book to DB", ex);
+            throw new TodoException("Unable to add todo to DB", ex);
         }
     }
 
     @Override
     public void updateTodo(Todo t) {
-
+        //TODO: implement
     }
 
     @Override

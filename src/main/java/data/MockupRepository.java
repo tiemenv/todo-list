@@ -18,11 +18,12 @@ public class MockupRepository implements TodoRepository {
     }
 
     @Override
-    public void addTodo(Todo t) {
+    public int addTodo(Todo t) {
         boolean added = todos.add(t);
         if(!added) {
             throw new TodoException("Failed to add todo");
         }
+        return 0;
     }
 
     @Override
@@ -32,7 +33,7 @@ public class MockupRepository implements TodoRepository {
 
     @Override
     public void updateTodo(Todo t) {
-        //TODO: implement
+
     }
 
     @Override

@@ -3,8 +3,6 @@ package domain;
 import java.util.Objects;
 
 public class Todo {
-
-    //TODO: id should autoincrement and be PK in the database
     private int id;
     private String description;
     private int importance;
@@ -24,16 +22,12 @@ public class Todo {
     }
 
     public Todo(String description, int importance) {
-        this.description = description;
-        this.importance = importance;
+        this(description, importance, true);
     }
 
     public Todo(String description){
-        this.description = description;
-        this.importance = 0;
+        this(description, 0);
     }
-
-
 
     public int getId() {
         return id;
