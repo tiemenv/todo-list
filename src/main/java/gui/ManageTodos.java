@@ -20,6 +20,12 @@ public class ManageTodos {
     @FXML
     private Button btnNew;
 
+    @FXML
+    private Button editTodo;
+
+    @FXML
+    private Button deleteTodo;
+
     private ObservableList<Todo> todoObservableList;
 
     @FXML
@@ -27,7 +33,6 @@ public class ManageTodos {
         ArrayList<Todo> todos = Repositories.getInstance().getTodoRepository().getTodos();
         todoObservableList = FXCollections.observableList(todos);
         lstTodos.setItems(todoObservableList);
-        System.out.println("init");
     }
 
     @FXML
@@ -49,12 +54,33 @@ public class ManageTodos {
 
     private void tryToAddTodo(Todo t){
         try {
-            Repositories.getInstance().getTodoRepository().addTodo(t);
+            //TODO: we need to somehow assign and know the id of the added todo
+            todoObservableList.add(t);
         } catch(TodoException ex){
             Alert al = new Alert(Alert.AlertType.ERROR);
             al.setContentText(ex.getMessage());
             al.showAndWait();
         }
+    }
+
+    @FXML
+    void deleteTodo(ActionEvent event) {
+        int tIndex = lstTodos.getSelectionModel().getSelectedIndex();
+        Todo t = lstTodos.getSelectionModel().getSelectedItem();
+        try{
+            //TODO: how do we grab the actual todo item from the selection in the observable list?
+            Repositories.getInstance().getTodoRepository().deleteTodo(t);
+            todoObservableList.remove(tIndex);
+        } catch(TodoException ex){
+            Alert al = new Alert(Alert.AlertType.ERROR);
+            al.setContentText(ex.getMessage());
+            al.showAndWait();
+        }
+    }
+
+    @FXML
+    void editTodo(ActionEvent event) {
+        System.out.println("editTodo");
     }
 }
 

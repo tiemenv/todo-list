@@ -14,29 +14,42 @@ public class MsSqlRepository implements TodoRepository {
 
     private static final String SQL_GET_TODOS = "select * from dbo.todos";
     private static final String SQL_GET_TODO = "select * from dbo.todos where id like ?";
-    private static final String SQL_ADD_TODO = "insert into dbo.todos (description, importance) values (?, ?);";
+    private static final String SQL_ADD_TODO = "insert into dbo.todos (description, importance) values (?, ?);" +
+            "select id from dbo.todos limit 1";
     private static final String SQL_UPDATE_TODO_DESCRIPTION = "update dbo.todos set description = ? where id like ?";
     private static final String SQL_UPDATE_TODO_IMPORTANCE = "update dbo.todos set importance = ? where id like ?";
     private static final String SQL_DELETE_TODO = "delete from dbo.todos where id = ?";
 
     @Override
+    //TODO: make this return the assigned id from the DB
+    //or try to add all the id's when initing?
     public void addTodo(Todo t) {
         try (
                 Connection con = MsSqlConnection.getConnection();
-                PreparedStatement prep = con.prepareStatement(SQL_ADD_TODO)
+                PreparedStatement prep = con.prepareStatement(SQL_ADD_TODO);
         ) {
             prep.setString(1, t.getDescription());
             prep.setInt(2, t.getImportance());
             prep.executeUpdate();
         } catch (SQLException ex) {
-            throw new TodoException("Unable to add book to DB", ex);
+            throw new TodoException("Unable to add todo to DB", ex);
         }
-
     }
 
     @Override
     public void deleteTodo(Todo t) {
-
+        try (
+                Connection con = MsSqlConnection.getConnection();
+                PreparedStatement prep = con.prepareStatement(SQL_DELETE_TODO);
+        ) {
+            //TODO: get the id from the selected Todo
+            //t.getId() always returns 0...
+            System.out.println("Deleting todo with id: " + t.getId());
+            prep.setInt(1, t.getId());
+            prep.executeUpdate();
+        } catch (SQLException ex) {
+            throw new TodoException("Unable to add book to DB", ex);
+        }
     }
 
     @Override
@@ -52,19 +65,19 @@ public class MsSqlRepository implements TodoRepository {
     @Override
     public ArrayList<Todo> getTodos() {
         ArrayList<Todo> todos = new ArrayList<>();
-
-
         try (
                 Connection con = MsSqlConnection.getConnection();
                 PreparedStatement prep = con.prepareStatement(SQL_GET_TODOS);
         ) {
             try (ResultSet rs = prep.executeQuery()) {
                 while (rs.next()) {
+                    int id = rs.getInt("id");
                     String description = rs.getString("description");
                     int importance = rs.getInt("importance");
                     int done = rs.getInt("done");
                     //convert int to bool for column done
-                    Todo t = new Todo(description, importance, done == 1);
+                    //dirty conversion
+                    Todo t = new Todo(id, description, importance, done == 1);
                     todos.add(t);
                 }
                 return todos;

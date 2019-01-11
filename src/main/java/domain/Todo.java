@@ -10,6 +10,13 @@ public class Todo {
     private int importance;
     private boolean done;
 
+    public Todo(int id, String description, int importance, boolean done) {
+        this.id = id;
+        this.description = description;
+        this.importance = importance;
+        this.done = done;
+    }
+
     public Todo(String description, int importance, boolean done) {
         this.description = description;
         this.importance = importance;
