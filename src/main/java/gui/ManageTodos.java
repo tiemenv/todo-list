@@ -30,6 +30,7 @@ public class ManageTodos {
 
     @FXML
     void initialize() {
+        //TODO: sort by importance
         ArrayList<Todo> todos = Repositories.getInstance().getTodoRepository().getTodos();
         todoObservableList = FXCollections.observableList(todos);
         lstTodos.setItems(todoObservableList);
@@ -37,24 +38,20 @@ public class ManageTodos {
 
     @FXML
     void addTodo(ActionEvent event) {
-
+        //TODO: implement importance selection buttons
         TextInputDialog tid = new TextInputDialog();
         tid.setContentText("Add todo description");
         Optional<String> descriptionOpt = tid.showAndWait();
 
         if (descriptionOpt.isPresent()) {
             String description = descriptionOpt.get();
-
             Todo t = new Todo(description);
             tryToAddTodo(t);
-
-
         }
     }
 
     private void tryToAddTodo(Todo t){
         try {
-            //TODO: we need to somehow assign and know the id of the added todo
             todoObservableList.add(new Todo(Repositories.getInstance().getTodoRepository().addTodo(t), t.getDescription(), t.getImportance(), t.isDone()));
         } catch(TodoException ex){
             Alert al = new Alert(Alert.AlertType.ERROR);
@@ -68,7 +65,6 @@ public class ManageTodos {
         int tIndex = lstTodos.getSelectionModel().getSelectedIndex();
         Todo t = lstTodos.getSelectionModel().getSelectedItem();
         try{
-            //TODO: how do we grab the actual todo item from the selection in the observable list?
             Repositories.getInstance().getTodoRepository().deleteTodo(t);
             todoObservableList.remove(tIndex);
         } catch(TodoException ex){
@@ -81,7 +77,19 @@ public class ManageTodos {
     @FXML
     void editTodo(ActionEvent event) {
         System.out.println("editTodo");
+        int tIndex = lstTodos.getSelectionModel().getSelectedIndex();
+        Todo t = lstTodos.getSelectionModel().getSelectedItem();
+        TextInputDialog tid = new TextInputDialog();
+        tid.setContentText("Update todo description");
+        Optional<String> descriptionOpt = tid.showAndWait();
+
+        if (descriptionOpt.isPresent()) {
+            String description = descriptionOpt.get();
+            Todo updatedTodo = new Todo(t.getId(), description, t.getImportance(), t.isDone());
+            todoObservableList.set(tIndex, updatedTodo);
+        }
     }
+
 }
 
 

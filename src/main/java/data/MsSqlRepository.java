@@ -32,9 +32,9 @@ public class MsSqlRepository implements TodoRepository {
             prep.setInt(2, t.getImportance());
             prep.executeUpdate();
             //now get the id of the inserted item
-            try(PreparedStatement prep2 = con.prepareStatement(SQL_GET_LAST_ID)){
-                try(ResultSet rs = prep2.executeQuery()){
-                    while(rs.next()){
+            try (PreparedStatement prep2 = con.prepareStatement(SQL_GET_LAST_ID)) {
+                try (ResultSet rs = prep2.executeQuery()) {
+                    while (rs.next()) {
                         return rs.getInt("id");
                     }
                 }
@@ -51,19 +51,28 @@ public class MsSqlRepository implements TodoRepository {
                 Connection con = MsSqlConnection.getConnection();
                 PreparedStatement prep = con.prepareStatement(SQL_DELETE_TODO);
         ) {
-            //TODO: get the id from the selected Todo
-            //t.getId() works for the initialized items, but not for later added ones
             System.out.println("Deleting todo with id: " + t.getId());
             prep.setInt(1, t.getId());
             prep.executeUpdate();
         } catch (SQLException ex) {
-            throw new TodoException("Unable to add todo to DB", ex);
+            throw new TodoException("Unable to delete todo from DB", ex);
         }
     }
 
     @Override
     public void updateTodo(Todo t) {
-        //TODO: implement
+        //TODO: edit importance
+        try (
+                Connection con = MsSqlConnection.getConnection();
+                PreparedStatement prep = con.prepareStatement(SQL_UPDATE_TODO_DESCRIPTION);
+        ) {
+            System.out.println("Updating todo with id: " + t.getId());
+            prep.setString(1, t.getDescription());
+            prep.setInt(2, t.getId());
+            prep.executeUpdate();
+        } catch (SQLException ex) {
+            throw new TodoException("Unable to update todo in DB", ex);
+        }
     }
 
     @Override

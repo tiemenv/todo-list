@@ -13,4 +13,3 @@ public interface TodoRepository {
 }
 
 //TODO: what about a NoSQL repo?
-//TODO: h2 repo

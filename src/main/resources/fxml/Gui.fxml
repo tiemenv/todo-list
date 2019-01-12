@@ -8,7 +8,7 @@
    <children>
       <ListView id="lstTodos" fx:id="lstTodos" layoutX="17.0" layoutY="18.0" prefHeight="349.0" prefWidth="238.0" />
       <Button id="btnNew" fx:id="btnNew" layoutX="274.0" layoutY="342.0" mnemonicParsing="false" onAction="#addTodo" prefHeight="25.0" prefWidth="137.0" text="New" />
-      <Button fx:id="editTodo" layoutX="352.0" layoutY="305.0" mnemonicParsing="false" onAction="#editTodo" prefHeight="25.0" prefWidth="59.0" text="Edit" />
-      <Button fx:id="deleteTodo" layoutX="274.0" layoutY="305.0" mnemonicParsing="false" onAction="#deleteTodo" prefHeight="25.0" prefWidth="59.0" text="Delete" />
+      <Button id="btnEdit" fx:id="editTodo" layoutX="352.0" layoutY="305.0" mnemonicParsing="false" onAction="#editTodo" prefHeight="25.0" prefWidth="59.0" text="Edit" />
+      <Button id="btnDelete" fx:id="deleteTodo" layoutX="274.0" layoutY="305.0" mnemonicParsing="false" onAction="#deleteTodo" prefHeight="25.0" prefWidth="59.0" text="Delete" />
    </children>
 </Pane>
