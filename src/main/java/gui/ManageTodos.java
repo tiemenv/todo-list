@@ -32,7 +32,7 @@ public class ManageTodos {
     @FXML
     private Button deleteTodo;
 
-    private ObservableList<Todo> todoObservableList;
+    public static ObservableList<Todo> todoObservableList;
 
     @FXML
     void initialize() {
@@ -45,6 +45,16 @@ public class ManageTodos {
     @FXML
     void addTodo(ActionEvent event) {
         openAddTodoPane();
+    }
+
+    public static void tryToAddTodo(Todo t){
+        try {
+            todoObservableList.add(new Todo(Repositories.getInstance().getTodoRepository().addTodo(t), t.getDescription(), t.getImportance(), t.isDone()));
+        } catch(TodoException ex){
+            Alert al = new Alert(Alert.AlertType.ERROR);
+            al.setContentText(ex.getMessage());
+            al.showAndWait();
+        }
     }
 
     private void openAddTodoPane(){
@@ -68,15 +78,7 @@ public class ManageTodos {
         }
     }
 
-    private void tryToAddTodo(Todo t){
-        try {
-            todoObservableList.add(new Todo(Repositories.getInstance().getTodoRepository().addTodo(t), t.getDescription(), t.getImportance(), t.isDone()));
-        } catch(TodoException ex){
-            Alert al = new Alert(Alert.AlertType.ERROR);
-            al.setContentText(ex.getMessage());
-            al.showAndWait();
-        }
-    }
+
 
     @FXML
     void deleteTodo(ActionEvent event) {
