@@ -6,9 +6,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import util.TodoException;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -38,15 +44,27 @@ public class ManageTodos {
 
     @FXML
     void addTodo(ActionEvent event) {
-        //TODO: implement importance selection buttons
-        TextInputDialog tid = new TextInputDialog();
-        tid.setContentText("Add todo description");
-        Optional<String> descriptionOpt = tid.showAndWait();
+        openAddTodoPane();
+    }
 
-        if (descriptionOpt.isPresent()) {
-            String description = descriptionOpt.get();
-            Todo t = new Todo(description);
-            tryToAddTodo(t);
+    private void openAddTodoPane(){
+        try{
+            URL fxmlURL = ClassLoader.getSystemResource("fxml/AddTodo.fxml");
+            FXMLLoader detailLoader = new FXMLLoader(fxmlURL);
+
+            Pane root = detailLoader.load();
+            AddTodo addTodo = detailLoader.getController();
+
+            Scene scene = new Scene(root);
+
+            Stage stage = new Stage();
+
+            addTodo.setStage(stage);
+            stage.setScene(scene);
+
+            stage.showAndWait();
+        } catch (IOException ex){
+            ex.printStackTrace();
         }
     }
 
