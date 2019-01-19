@@ -38,6 +38,7 @@ public class ManageTodos {
     void initialize() {
         //TODO: sort by importance
         ArrayList<Todo> todos = Repositories.getInstance().getTodoRepository().getTodos();
+        System.out.println(todos);
         todoObservableList = FXCollections.observableList(todos);
         lstTodos.setItems(todoObservableList);
     }
@@ -47,18 +48,18 @@ public class ManageTodos {
         openAddTodoPane();
     }
 
-    public static void tryToAddTodo(Todo t){
+    public static void tryToAddTodo(Todo t) {
         try {
             todoObservableList.add(new Todo(Repositories.getInstance().getTodoRepository().addTodo(t), t.getDescription(), t.getImportance(), t.isDone()));
-        } catch(TodoException ex){
+        } catch (TodoException ex) {
             Alert al = new Alert(Alert.AlertType.ERROR);
             al.setContentText(ex.getMessage());
             al.showAndWait();
         }
     }
 
-    private void openAddTodoPane(){
-        try{
+    private void openAddTodoPane() {
+        try {
             URL fxmlURL = ClassLoader.getSystemResource("fxml/AddTodo.fxml");
             FXMLLoader detailLoader = new FXMLLoader(fxmlURL);
 
@@ -73,43 +74,44 @@ public class ManageTodos {
             stage.setScene(scene);
 
             stage.showAndWait();
-        } catch (IOException ex){
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
 
 
-
     @FXML
     void deleteTodo(ActionEvent event) {
         int tIndex = lstTodos.getSelectionModel().getSelectedIndex();
-        Todo t = lstTodos.getSelectionModel().getSelectedItem();
-        try{
-            Repositories.getInstance().getTodoRepository().deleteTodo(t);
-            todoObservableList.remove(tIndex);
-        } catch(TodoException ex){
-            Alert al = new Alert(Alert.AlertType.ERROR);
-            al.setContentText(ex.getMessage());
-            al.showAndWait();
+        if (tIndex != -1) {
+            Todo t = lstTodos.getSelectionModel().getSelectedItem();
+            try {
+                Repositories.getInstance().getTodoRepository().deleteTodo(t);
+                todoObservableList.remove(tIndex);
+            } catch (TodoException ex) {
+                Alert al = new Alert(Alert.AlertType.ERROR);
+                al.setContentText(ex.getMessage());
+                al.showAndWait();
+            }
         }
     }
 
     @FXML
     void editTodo(ActionEvent event) {
-        System.out.println("editTodo");
         int tIndex = lstTodos.getSelectionModel().getSelectedIndex();
-        Todo t = lstTodos.getSelectionModel().getSelectedItem();
-        TextInputDialog tid = new TextInputDialog();
-        tid.setContentText("Update todo description");
-        Optional<String> descriptionOpt = tid.showAndWait();
+        if (tIndex != -1) {
+            Todo t = lstTodos.getSelectionModel().getSelectedItem();
+            TextInputDialog tid = new TextInputDialog();
+            tid.setContentText("Update todo description");
+            Optional<String> descriptionOpt = tid.showAndWait();
 
-        if (descriptionOpt.isPresent()) {
-            String description = descriptionOpt.get();
-            Todo updatedTodo = new Todo(t.getId(), description, t.getImportance(), t.isDone());
-            todoObservableList.set(tIndex, updatedTodo);
+            if (descriptionOpt.isPresent()) {
+                String description = descriptionOpt.get();
+                Todo updatedTodo = new Todo(t.getId(), description, t.getImportance(), t.isDone());
+                todoObservableList.set(tIndex, updatedTodo);
+            }
         }
     }
-
 }
 
 

@@ -34,8 +34,22 @@ public class AddTodo {
 
     @FXML
     void addTodo(ActionEvent event) {
-        System.out.println(priority.getSelectedToggle().toString());
-        Todo t = new Todo(txtDescription.getCharacters().toString());
+        RadioButton selectedRadioButton = (RadioButton) priority.getSelectedToggle();
+        String selectedRadioButtonId = selectedRadioButton.getId();
+        int priorityInt;
+        switch (selectedRadioButtonId) {
+            case "radioLow": priorityInt = 10;
+            break;
+            case "radioNormal": priorityInt = 20;
+            break;
+            case "radioHigh": priorityInt = 30;
+            break;
+            default: priorityInt = 20;
+                System.out.println("default case ERR001");
+                break;
+
+        }
+        Todo t = new Todo(txtDescription.getCharacters().toString(), priorityInt);
         ManageTodos.tryToAddTodo(t);
         System.out.println(txtDescription.getCharacters().toString());
         stage.close();

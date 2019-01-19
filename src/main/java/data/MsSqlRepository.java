@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class MsSqlRepository implements TodoRepository {
 
-    private static final String SQL_GET_TODOS = "select * from dbo.todos";
+    private static final String SQL_GET_TODOS = "select * from dbo.todos order by importance desc";
     private static final String SQL_GET_TODO = "select * from dbo.todos where id like ?";
     private static final String SQL_ADD_TODO = "insert into dbo.todos (description, importance) values (?, ?);";
     private static final String SQL_UPDATE_TODO_DESCRIPTION = "update dbo.todos set description = ? where id like ?";
